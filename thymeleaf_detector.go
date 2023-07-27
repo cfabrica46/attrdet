@@ -1,23 +1,17 @@
 package attrdet
 
 import (
-	"strings"
-
 	"golang.org/x/net/html"
 )
 
-type ThymeleafDetector struct{}
+type ThymeleafDetector struct {
+	BaseDetector
+}
 
 func (td *ThymeleafDetector) DetectAttributes(node *html.Node, attrs map[string]int) {
-	if node.Type == html.ElementNode {
-		for _, attr := range node.Attr {
-			if strings.HasPrefix(attr.Key, "th:") {
-				attrs[attr.Key]++
-			}
-		}
-	}
+	td.BaseDetector.DetectAttributes(node, attrs, "th:")
+}
 
-	for c := node.FirstChild; c != nil; c = c.NextSibling {
-		td.DetectAttributes(c, attrs)
-	}
+func (td *ThymeleafDetector) DetectVariables(node *html.Node, variables map[string]int) {
+	td.BaseDetector.DetectVariables(node, variables, "${", "}")
 }
