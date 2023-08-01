@@ -38,3 +38,17 @@ func (bd *BaseDetector) DetectVariables(node *html.Node, variables map[string]in
 		bd.DetectVariables(c, variables, startTag, endTag)
 	}
 }
+
+func (bd *BaseDetector) DetectScriptTags(node *html.Node) int {
+	count := 0
+
+	if node.Type == html.ElementNode && node.Data == "script" {
+		count++
+	}
+
+	for c := node.FirstChild; c != nil; c = c.NextSibling {
+		count += bd.DetectScriptTags(c)
+	}
+
+	return count
+}
